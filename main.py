@@ -2,7 +2,8 @@ from argparse import ArgumentParser, Namespace
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.separator import Separator
-from transformers import pipeline
+from diffusers import StableDiffusionPipeline
+import torch
 
 def main():
     inquirer.text(message="Welcome to this fancy.....CLI app ¯\_(ツ)_/¯").execute()
@@ -15,15 +16,14 @@ def main():
     ).execute()
     
     if choice == "Generate an ASCII art":
+        model_id = "runwayml/stable-diffusion-v1-5"
+        pipeline = StableDiffusionPipeline.from_pretrained(model_id, torch_type=torch.float16)
+        # pipeline = pipeline.to("cuda")
+        
         text_to_generate = inquirer.text(message="What do you want to ascii today?").execute()
-        text_to_generate.strip()
-        print(text_to_generate)
-        #  test if huggingface API works here. use default sentiment analysis for now.
-        classifier = pipeline(task="sentiment-analysis")
-        preds = classifier(text_to_generate)
-        preds = [{"score": round(pred["score"], 4), "label": pred["label"]} for pred in preds]
-        print(preds)
-        # api to generate a picture given string
+        image = pipeline(text_to_generate).images[0]
+        
+        image.save("generative_art.png")
     elif choice == "Tell me a joke":
         print("I'll tell you a joke later")
         # api to generate a random joke of the day text
