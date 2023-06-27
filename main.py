@@ -1,8 +1,9 @@
 from argparse import ArgumentParser, Namespace
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-from InquirerPy.separator import Separator
 from diffusers import StableDiffusionPipeline
+from transformers import pipeline
+
 import torch
 
 def main():
@@ -10,27 +11,31 @@ def main():
     choice = inquirer.select(
         message="Pick your choice of whim:", 
         choices=[
-            Choice("Generate an ASCII art", name="Generate ASCII"),
+            Choice("Generate an art piece", name="Generate Art"),
             Choice("Tell me a joke", name="Joke")
         ]
     ).execute()
     
-    if choice == "Generate an ASCII art":
+    if choice == "Generate an art piece":
         model_id = "runwayml/stable-diffusion-v1-5"
         pipeline = StableDiffusionPipeline.from_pretrained(model_id, torch_type=torch.float16)
         # pipeline = pipeline.to("cuda")
         
-        text_to_generate = inquirer.text(message="What do you want to ascii today?").execute()
+        text_to_generate = inquirer.text(message="What kind of art do you want to generate today?").execute()
         image = pipeline(text_to_generate).images[0]
         
         image.save("generative_art.png")
     elif choice == "Tell me a joke":
-        print("I'll tell you a joke later")
-        # api to generate a random joke of the day text
+        joke_feed = inquirer.text("Write half a joke so the computer can generate the rest: ").execute()
+        generator = pipeline('text-generation',
+                     model='huggingtweets/dadsaysjokes')
+        generator(joke_feed, num_return_sequences=5)
     
     
 if __name__ == "__main__":
     main()
+    
+    
 # parser = ArgumentParser()
 
 # parser.add_argument('square', help='Squares a given number', type=int, default=0, nargs='?')
