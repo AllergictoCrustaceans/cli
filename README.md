@@ -11,6 +11,6 @@ This is a CLI application and the `main.py` module is a code sample of how to us
 
 Libraries and services used:
 - InquirerPy -- to add a more user-friendly CLI UX experience
-- HuggingFace models ([dadsaysjokes](https://huggingface.co/huggingtweets/dadsaysjokes?text=my+life+is), and stable diffusion)
-  1. dadsaysjokes - generates a joke based on the starter text the user provides
-  2. stable diffusion model - generates an art piece based on the prompt the user provides 
+- HuggingFace models ([dadsaysjokes](https://huggingface.co/huggingtweets/dadsaysjokes?text=my+life+is), and [stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5)
+  1. dadsaysjokes - a transformer model that generates a joke based on the starter text the user provides
+  2. stable diffusion model - a text-to-image diffusion model generates an art piece based on the prompt the user provides 
